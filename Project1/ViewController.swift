@@ -20,17 +20,22 @@ class ViewController: UITableViewController {
         
         // Do any additional setup after loading the view.
         
-        let fm = FileManager.default
-        let path = Bundle.main.resourcePath!
-        let items = try! fm.contentsOfDirectory(atPath: path)
-        
-        for item in items.sorted() {
-            if item.hasPrefix("nssl") {
-                // this is a pic to load!
-                pictures.append(item)
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let fm = FileManager.default
+            let path = Bundle.main.resourcePath!
+            let items = try! fm.contentsOfDirectory(atPath: path)
+            
+            for item in items {
+                if item.hasPrefix("nssl") {
+                    // this is a pic to load!
+                    self?.pictures.append(item)
+                }
+                self?.pictures.sort()
             }
+            
         }
         
+        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
