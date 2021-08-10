@@ -20,7 +20,7 @@ class ViewController: UITableViewController {
         
         // Do any additional setup after loading the view.
         
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        DispatchQueue.global(qos: .background).async { [weak self] in
             let fm = FileManager.default
             let path = Bundle.main.resourcePath!
             let items = try! fm.contentsOfDirectory(atPath: path)
@@ -32,10 +32,10 @@ class ViewController: UITableViewController {
                 }
                 self?.pictures.sort()
             }
-            
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
         }
-        
-        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
